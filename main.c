@@ -11,8 +11,8 @@ int main() {
   unsigned char buf[256];
   for (size_t i = 0; i < 256; i++) {
     buf[i] = i;
+    blake3_hasher_update(&hasher, buf, i);
   }
-  blake3_hasher_update(&hasher, buf, 256);
 
   // Finalize the hash. BLAKE3_OUT_LEN is the default output length, 32 bytes.
   uint8_t output[BLAKE3_OUT_LEN];
