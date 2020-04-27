@@ -8,11 +8,11 @@ int main() {
   blake3_hasher_init(&hasher);
 
   // Read input bytes from stdin.
-  unsigned char buf[65536];
-  ssize_t n;
-  while ((n = read(STDIN_FILENO, buf, sizeof(buf))) > 0) {
-    blake3_hasher_update(&hasher, buf, n);
+  unsigned char buf[256];
+  for (size_t i = 0; i < 256; i++) {
+    buf[i] = i;
   }
+  blake3_hasher_update(&hasher, buf, 256);
 
   // Finalize the hash. BLAKE3_OUT_LEN is the default output length, 32 bytes.
   uint8_t output[BLAKE3_OUT_LEN];
