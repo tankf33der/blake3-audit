@@ -28,7 +28,7 @@ enum blake3_flags {
 #define INLINE static inline __attribute__((always_inline))
 #endif
 
-#if defined(__x86_64__) || defined(_M_X64) 
+#if defined(__x86_64__) || defined(_M_X64)
 #define IS_X86
 #define IS_X86_64
 #endif
@@ -38,12 +38,14 @@ enum blake3_flags {
 #define IS_X86_32
 #endif
 
+/*
 #if defined(IS_X86)
 #if defined(_MSC_VER)
 #include <intrin.h>
 #endif
 #include <immintrin.h>
 #endif
+*/
 
 #if defined(IS_X86)
 #define MAX_SIMD_DEGREE 16
@@ -117,7 +119,7 @@ INLINE unsigned int popcnt(uint64_t x) {
 }
 
 // Largest power of two less than or equal to x. As a special case, returns 1
-// when x is 0. 
+// when x is 0.
 INLINE uint64_t round_down_to_power_of_2(uint64_t x) {
   return 1ULL << highest_one(x | 1);
 }
