@@ -106,16 +106,16 @@ static unsigned int highest_one(uint64_t x) {
 
 // Count the number of 1 bits.
 INLINE unsigned int popcnt(uint64_t x) {
-#if defined(__GNUC__) || defined(__clang__)
-  return __builtin_popcountll(x);
-#else
+//#if defined(__GNUC__) || defined(__clang__)
+//  return __builtin_popcountll(x);
+//#else
   unsigned int count = 0;
   while (x != 0) {
     count += 1;
     x &= x - 1;
   }
   return count;
-#endif
+//#endif
 }
 
 // Largest power of two less than or equal to x. As a special case, returns 1
