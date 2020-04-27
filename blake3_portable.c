@@ -130,7 +130,7 @@ void blake3_compress_xof_portable(const uint32_t cv[8],
   store32(&out[15 * 4], state[15] ^ cv[7]);
 }
 
-INLINE void hash_one_portable(const uint8_t *input, size_t blocks,
+void hash_one_portable(const uint8_t *input, size_t blocks,
                               const uint32_t key[8], uint64_t counter,
                               uint8_t flags, uint8_t flags_start,
                               uint8_t flags_end, uint8_t out[BLAKE3_OUT_LEN]) {

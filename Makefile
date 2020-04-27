@@ -6,7 +6,7 @@ m:  c
 u:  c
 	clang -fsanitize=undefined *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41 && ./a.out
 t: c
-	tcc *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41
+	tcc *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41 && ./a.out
 mike: c
 	cat *.c > mike.c
 ccomp: mike

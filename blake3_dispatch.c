@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "blake3.h"
+#include "blake3_impl.h"
 
 void blake3_compress_in_place(uint32_t cv[8],
                               const uint8_t block[BLAKE3_BLOCK_LEN],
