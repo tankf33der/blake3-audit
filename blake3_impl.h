@@ -28,7 +28,7 @@ enum blake3_flags {
 #define INLINE static inline __attribute__((always_inline))
 #endif
 
-#if defined(__x86_64__) || defined(_M_X64)
+#if defined(__x86_64__) || defined(_M_X64) 
 #define IS_X86
 #define IS_X86_64
 #endif
@@ -38,14 +38,12 @@ enum blake3_flags {
 #define IS_X86_32
 #endif
 
-/*
 #if defined(IS_X86)
 #if defined(_MSC_VER)
 #include <intrin.h>
 #endif
-#include <immintrin.h>
+// #include <immintrin.h>
 #endif
-*/
 
 #if defined(IS_X86)
 #define MAX_SIMD_DEGREE 16
@@ -106,20 +104,20 @@ static unsigned int highest_one(uint64_t x) {
 
 // Count the number of 1 bits.
 INLINE unsigned int popcnt(uint64_t x) {
-//#if defined(__GNUC__) || defined(__clang__)
-//  return __builtin_popcountll(x);
-//#else
+#if defined(__GNUC__) || defined(__clang__)
+  return __builtin_popcountll(x);
+#else
   unsigned int count = 0;
   while (x != 0) {
     count += 1;
     x &= x - 1;
   }
   return count;
-//#endif
+#endif
 }
 
 // Largest power of two less than or equal to x. As a special case, returns 1
-// when x is 0.
+// when x is 0. 
 INLINE uint64_t round_down_to_power_of_2(uint64_t x) {
   return 1ULL << highest_one(x | 1);
 }
@@ -146,6 +144,25 @@ INLINE void load_key_words(const uint8_t key[BLAKE3_KEY_LEN],
   key_words[5] = load32(&key[5 * 4]);
   key_words[6] = load32(&key[6 * 4]);
   key_words[7] = load32(&key[7 * 4]);
+}
+
+INLINE void store32(void *dst, uint32_t w) {
+  uint8_t *p = (uint8_t *)dst;
+  p[0] = (uint8_t)(w >> 0);
+  p[1] = (uint8_t)(w >> 8);
+  p[2] = (uint8_t)(w >> 16);
+  p[3] = (uint8_t)(w >> 24);
+}
+
+INLINE void store_cv_words(uint8_t bytes_out[32], uint32_t cv_words[8]) {
+  store32(&bytes_out[0 * 4], cv_words[0]);
+  store32(&bytes_out[1 * 4], cv_words[1]);
+  store32(&bytes_out[2 * 4], cv_words[2]);
+  store32(&bytes_out[3 * 4], cv_words[3]);
+  store32(&bytes_out[4 * 4], cv_words[4]);
+  store32(&bytes_out[5 * 4], cv_words[5]);
+  store32(&bytes_out[6 * 4], cv_words[6]);
+  store32(&bytes_out[7 * 4], cv_words[7]);
 }
 
 void blake3_compress_in_place(uint32_t cv[8],
@@ -184,6 +201,21 @@ void blake3_hash_many_portable(const uint8_t *const *inputs, size_t num_inputs,
                                uint8_t flags_end, uint8_t *out);
 
 #if defined(IS_X86)
+#if !defined(BLAKE3_NO_SSE2)
+void blake3_compress_in_place_sse2(uint32_t cv[8],
+                                   const uint8_t block[BLAKE3_BLOCK_LEN],
+                                   uint8_t block_len, uint64_t counter,
+                                   uint8_t flags);
+void blake3_compress_xof_sse2(const uint32_t cv[8],
+                              const uint8_t block[BLAKE3_BLOCK_LEN],
+                              uint8_t block_len, uint64_t counter,
+                              uint8_t flags, uint8_t out[64]);
+void blake3_hash_many_sse2(const uint8_t *const *inputs, size_t num_inputs,
+                           size_t blocks, const uint32_t key[8],
+                           uint64_t counter, bool increment_counter,
+                           uint8_t flags, uint8_t flags_start,
+                           uint8_t flags_end, uint8_t *out);
+#endif
 #if !defined(BLAKE3_NO_SSE41)
 void blake3_compress_in_place_sse41(uint32_t cv[8],
                                     const uint8_t block[BLAKE3_BLOCK_LEN],

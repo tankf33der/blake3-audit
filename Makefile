@@ -6,7 +6,7 @@ m:  c
 u:  c
 	clang -fsanitize=undefined *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41 && ./a.out
 t: c
-	tcc *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41 && ./a.out
+	tcc *.c -DBLAKE3_NO_AVX512 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_SSE2 && ./a.out
 c:
 	rm -rf *.o *.out mike.*
 
